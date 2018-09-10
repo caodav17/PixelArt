@@ -1,0 +1,11 @@
+html
+    head
+        title= PixelArt
+    body
+        img(src="/images/pixelate.jpg" onerror="this.onerror=null;this.src='/images/preview.jpg';")
+        form(method="POST" action="/upload" enctype="multipart/form-data")
+            input(type="file" name="image")
+            input(type="submit" value="Upload Image")
+        form(method="POST" action="/send")
+            input(type="text" name="size" value="Size of each pixel block")
+            input(type="submit" value="Download New")
