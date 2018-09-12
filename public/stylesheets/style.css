@@ -1,0 +1,17 @@
+#window {
+    margin: auto;
+    text-align: center;
+    width: 1000px;
+    height: 550px;
+}
+
+#download-btn {
+    margin: 3px;
+}
+
+img {
+    max-width: 1000px;
+    max-height: 400px;
+    vertical-align: middle;
+    margin: 10px;
+}

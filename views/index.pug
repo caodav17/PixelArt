@@ -1,11 +1,18 @@
 html
     head
+        meta(charset="utf-8")
+        meta(name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no")
         title= PixelArt
+        link(rel="stylesheet" href="/stylesheets/bootstrap.min.css")
+        link(rel="stylesheet" href="/stylesheets/style.css")
     body
-        img(src="/images/pixelate.jpg" onerror="this.onerror=null;this.src='/images/preview.jpg';")
-        form(method="POST" action="/upload" enctype="multipart/form-data")
-            input(type="file" name="image")
-            input(type="submit" value="Upload Image")
-        form(method="POST" action="/send")
-            input(type="text" name="size" value="Size of each pixel block")
-            input(type="submit" value="Download New")
+        #window
+            img(src="/images/pixelate.jpg" onerror="this.onerror=null;this.src='/images/preview.jpg';")
+            form(method="POST" action="/upload" enctype="multipart/form-data")
+                input(type="file" name="image")
+                input(type="submit" value="Upload Image")
+            form(method="POST" action="/send")
+                span Size of each block: 
+                input(type="text" name="size" placeholder="value in pixels")
+                br
+                input(type="submit" id="download-btn" value="Download Pixlated Image")
