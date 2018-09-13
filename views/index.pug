@@ -7,12 +7,16 @@ html
         link(rel="stylesheet" href="/stylesheets/style.css")
     body
         #window
-            img(src="/images/pixelate.jpg" onerror="this.onerror=null;this.src='/images/preview.jpg';")
+            - const imgPath = "/images/" + session_id + "_preview.jpg"
+            img(src=imgPath onerror="this.onerror=null;this.src='/images/preview.jpg';")
             form(method="POST" action="/upload" enctype="multipart/form-data")
                 input(type="file" name="image")
                 input(type="submit" value="Upload Image")
-            form(method="POST" action="/send")
+            form(method="POST" action="/download")
                 span Size of each block: 
-                input(type="text" name="size" placeholder="value in pixels")
+                input(type="text" name="size")
                 br
-                input(type="submit" id="download-btn" value="Download Pixlated Image")
+                input#download-btn(type="submit" value="Download Pixlated Image")
+            if errors
+                for error in errors
+                    p.error= error.msg

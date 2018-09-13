@@ -9,6 +9,10 @@
     margin: 3px;
 }
 
+.error {
+    color: red;
+}
+
 img {
     max-width: 1000px;
     max-height: 400px;
