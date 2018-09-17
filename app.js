@@ -1,10 +1,12 @@
 const express = require("express");
 const bodyParser = require("body-parser");
 const path = require("path");
+const fs = require("fs");
 const multer = require("multer");
 const exec = require("child_process").exec;
 const session = require("express-session");
 const validator = require("express-validator");
+const schedule = require("node-schedule");
 
 
 const storage = multer.diskStorage({
@@ -23,6 +25,24 @@ const upload = multer({
 const app = express();
 const port = process.env.PORT || 3000;
 
+const imgPath = path.join(__dirname, "/public/images");
+//hour: 00, minute: 00
+const midnight = schedule.scheduleJob({
+    rule: "0 0 * * *"
+}, function () {
+    fs.readdir(imgPath, function (err, files) {
+        files.forEach(function(fileName){
+            if (fileName !== "preview.jpg"){
+                const file = path.join(imgPath, "/", fileName);
+                fs.unlink(file, function(err){
+                    if (err) return console.log(err);
+                    console.log("deleted " + fileName);
+                });
+            }
+        });
+    });
+});
+
 app.set("views", "./views")
     .set("view engine", "pug")
     .use(express.static(path.join(__dirname, "/public")))
@@ -38,14 +58,11 @@ app.set("views", "./views")
 
 
 app.get("/", function (req, res) {
-        console.log(req.session.errors);
         res.render("index", {
             session_id: req.session.id,
             errors: req.session.errors
         });
         req.session.errors = null;
-        console.log("cleared");
-        console.log(req.session.errors);
     })
     .post("/upload", upload.single("image"), function (req, res) {
         req.session.errors = null;
@@ -54,7 +71,7 @@ app.get("/", function (req, res) {
     .post("/download", function (req, res) {
         const size = req.body.size;
         req.checkBody("size", "Input a number").isInt();
-        const errors = req.validationErrors();
+        let errors = req.validationErrors();
         req.session.errors = errors;
         if (errors) {
             res.redirect("/");
@@ -74,7 +91,7 @@ app.get("/", function (req, res) {
                     }
                 });
         }
-        
+
     });
 
 app.listen(port);
