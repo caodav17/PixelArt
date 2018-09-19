@@ -28,17 +28,19 @@ const port = process.env.PORT || 3000;
 const imgPath = path.join(__dirname, "/public/images");
 //hour: 00, minute: 00
 const midnight = schedule.scheduleJob({
-    rule: "0 0 * * *"
+    rule: "12 20 * * *"
 }, function () {
     fs.readdir(imgPath, function (err, files) {
-        files.forEach(function(fileName){
-            if (fileName !== "preview.jpg"){
-                const file = path.join(imgPath, "/", fileName);
-                fs.unlink(file, function(err){
+        files.forEach(function (fileName) {
+            const filePath = path.join(imgPath, "/", fileName);
+            fs.stat(filePath, function (err, stats){
+                if (fileName !== "preview.jpg" && (Math.abs(new Date() - stats.mtime) > 86400000)){
+                    fs.unlink(filePath, function (err) {
                     if (err) return console.log(err);
                     console.log("deleted " + fileName);
                 });
-            }
+                }
+            });
         });
     });
 });
@@ -92,6 +94,9 @@ app.get("/", function (req, res) {
                 });
         }
 
+    })
+    .get("*", function (req, res) {
+        res.redirect("/");
     });
 
 app.listen(port);
